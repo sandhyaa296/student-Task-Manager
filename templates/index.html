@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>Student Task Manager</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <h2>Welcome, Student!</h2>
+        <p>Organize your studies and manage your daily tasks.</p>
+    </section>
+
+    <section class="task-section">
+        <h2>Add a New Task</h2>
+
+        <form action="/add" method="POST" class="task-form">
+            <input type="text" name="title"
+                   placeholder="Enter task title" required>
+
+            <textarea name="description"
+                      placeholder="Enter task description"></textarea>
+
+            <button type="submit">Add Task</button>
+        </form>
+    </section>
+
+    <section class="task-section">
+        <h2>My Study Tasks</h2>
+
+        {% if tasks %}
+            {% for task in tasks %}
+                <div class="task-card">
+                    <h3>{{ task.title }}</h3>
+                    <p>{{ task.description }}</p>
+
+                    <p>Status:
+                        {% if task.completed %}
+                            <span class="completed">Completed</span>
+                        {% else %}
+                            <span class="pending">Pending</span>
+                        {% endif %}
+                    </p>
+
+                    <div class="actions">
+                        <a href="{{ url_for('complete_task', id=task.id) }}">
+                            {% if task.completed %}Undo{% else %}Complete{% endif %}
+                        </a>
+
+                        <a href="{{ url_for('delete_task', id=task.id) }}"
+                           onclick="return confirm('Delete this task?')">
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No tasks added yet. Add your first task!</p>
+        {% endif %}
+    </section>
+
+</main>
+
+<footer>
+    <p>© 2026 Student Task Manager | Built with Python Flask</p>
+</footer>
+
+</body>
+</html>
